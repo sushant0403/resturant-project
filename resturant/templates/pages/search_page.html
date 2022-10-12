@@ -19,8 +19,12 @@
     }
 </style>
 
-<h2> this is home page </h2>
-
+<h2> Search results :  </h2>
+{% if product_count < 2 %}
+<p> {{product_count}} dish found.</p>
+{% else %}
+<p> {{product_count}} dishes found.</p>
+{% endif %}
 <div class="card-group dishes">
     {% for dish in dishes %}
         <a href="/dish_detail/{{dish.id}}">

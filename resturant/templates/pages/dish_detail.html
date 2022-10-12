@@ -1,0 +1,229 @@
+{% extends './base.html' %}
+{% load static %}
+{% block content %}
+
+<style type="text/css">
+    .dish_detail{
+        max-width: 1200px;
+    }
+    .slider-wrap{
+        height: 600px;
+        width: 100%;
+      }
+      .divider{
+        height:10px;
+        width: 100%;
+        background:#d0d0d0;
+      }
+    
+      .slider-wrap .slider-main {
+        position: absolute;
+        width : 100%;
+      }
+    
+      .slider-wrap .slider-main .item {
+        width: 100%;
+        height: 600px;
+      }
+    
+      .slider-wrap .slider-main .item img{
+        width : 100%;
+      }
+      @media screen and (max-width: 1290px){
+        .slider-wrap .slider-main .item {
+          width: 100%;
+          
+        }
+      }
+      
+      @media screen and (max-width: 1000px){
+        .slider-wrap .slider-main .item {
+          width: 100%;
+          
+        }
+      }
+      @media screen and (max-width: 900px){
+        .slider-wrap .slider-main {
+          position: absolute;
+          width : 100%;
+        }
+        .slider-wrap .slider-main .item {
+          width: 44.5%;
+          height: 200px;
+          
+        }
+      }
+      @media screen and (max-width: 700px){
+        .slider-wrap .slider-main {
+          position: absolute;
+          width : 100%;
+        }
+        .slider-wrap .slider-main .item {
+          width: 77%;
+          height: 200px;
+          
+        }
+      }
+      @media screen and (max-width: 600px){
+        .slider-wrap .slider-main {
+          position: absolute;
+          width : 100%;
+        }
+        .slider-wrap .slider-main .item {
+          width: 77%;
+          height: 200px;
+          
+        }
+      }
+      @media screen and (max-width: 45 0px){
+        .slider-wrap .slider-main {
+          position: absolute;
+          width : 100%;
+        }
+        .slider-wrap .slider-main .item {
+          width: 87%;
+          height: 170px;
+        }
+        .slider-wrap{
+          position: relative;
+          height: 170px;
+          overflow: hidden; 
+          margin : 5px 0px;
+          width: 100%;
+        }
+      }
+</style>
+<div class="card mb-12 dish_detail">
+    <div class="row">
+        <aside class="col-md-6">
+            <article class="gallery-wrap"> 
+                <div class="img-big-wrap mainImage">
+                <center><a href="#"><img src="{{dish.image.url}}"></a></center>
+                </div> <!-- img-big-wrap.// -->
+                
+            </article> <!-- gallery-wrap .end// -->
+            <ul class="thumb">
+            <li class="d-flex">
+            <a href="{{dish.image.url}}" target="mainImage"><img src="{{dish.image.url}}"></a>
+            {% for i in photos %}
+            <a href="{{i.image.url}}" target="mainImage">
+            <img src="{{i.image.url}}" alt="Product Image" style="width:80px; height:80px; object-fit:cover;"></a>
+            {% endfor %}
+            </li>
+            </ul>
+        </aside>
+        <div class="col-md-6">
+            <div class="card-body">
+            <h5 class="card-title">{{dish.dish_name}}</h5>
+            <p class="card-text">{{dish.description}}</p>
+            <h6>Ingredients : </h6>
+            <p>{{dish.ingredients}}</p>
+            <h6>size</h6>
+              <select name="color" class="form-control" required>
+                {% for i in dish.variation_set.sizes %}
+                  <option value="{{i.variation_value}}">{{i.variation_value}}</option>
+                {% endfor %}
+              </select>
+
+            <br>
+            <h6>price</h6>
+              {% for i in dish.variation_set.sizes %}
+                  <p> Nrs {{i.price}} for {{i.variation_value}}
+                    {% if i.stock <= 0 %}
+                    <b class="text-danger">Out of stock</b><br>
+                      <b class="text-warning">comming soon</b>
+                  {% else %}
+                      <b class="text-success">Available</b>
+                  {% endif %}
+                </p>
+              {% endfor %}
+              <button class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </button>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+            <form action = "" method ="POST">
+            {% csrf_token %}
+              <h5> Write Your Review</h5>
+              {% include "includes/alert.html" %}
+              <div>
+                <label> How do you rate this product?</label>
+                <br>
+                <div class="rate">
+                  <input type="radio" name="rating" id="rating10" value="5" required/><label for="rating10" title="5"></label>
+                  <input type="radio" name="rating" id="rating9" value="4.5" required/><label for="rating9" title="4.5" class="half"></label>
+                  <input type="radio" name="rating" id="rating8" value="4" required/><label for="rating8" title="4"></label>
+                  <input type="radio" name="rating" id="rating7" value="3.5" required/><label for="rating7" title="3.5" class="half"></label>
+                  <input type="radio" name="rating" id="rating6" value="3" required/><label for="rating6" title="3"></label>
+                  <input type="radio" name="rating" id="rating5" value="2.5" required/><label for="rating5" title="2.5" class="half"></label>
+                  <input type="radio" name="rating" id="rating4" value="2" required/><label for="rating4" title="2"></label>
+                  <input type="radio" name="rating" id="rating3" value="1.5" required/><label for="rating3" title="1.5" class="half"></label>
+                  <input type="radio" name="rating" id="rating2" value="1" required/><label for="rating2" title="1"></label>
+                  <input type="radio" name="rating" id="rating1" value="0.5" required/><label for="rating1" title="0.5" class="half"></label>
+                </div>
+                <br>
+                Review Title :
+                <input type="text" class="form-control" name="subject">
+                <br>
+                Review :
+                <input type="textarea" class="form-control" name="review">
+                <br>
+                {% if user.is_authenticated %}
+                  {% if orderproduct is False %}
+                    You need to purchase the product to submit your review.
+                  {% else %}
+                    <input type="submit" class="btn btn-primary" valure="submit review">
+                  {% endif %}
+                {% else %}
+                You need to <a href="{% url 'login' %}"> login </a>to submit your review.
+                {% endif %}
+              </div>
+            </form>
+            </div>
+            </div>
+    </div>
+    <header class="section-heading">
+      <h3>Customer Reviews </h3>  
+      <span style="color:#ffb503;">
+        <i class="fa fa-star{% if single_product.averagereview >= 0.5 and single_product.averagereview < 1 %}-half-o{% elif single_product.averagereview < 0.5 %}-o{% endif %}" aria-hidden="true"></i>
+        <i class="fa fa-star{% if single_product.averagereview >= 1.5 and single_product.averagereview < 2 %}-half-o{% elif single_product.averagereview < 1.5 %}-o{% endif %}" aria-hidden="true"></i>
+        <i class="fa fa-star{% if single_product.averagereview >= 2.5 and single_product.averagereview < 3 %}-half-o{% elif single_product.averagereview < 2.5 %}-o{% endif %}" aria-hidden="true"></i>
+        <i class="fa fa-star{% if single_product.averagereview >= 3.5 and single_product.averagereview < 4 %}-half-o{% elif single_product.averagereview < 3.5 %}-o{% endif %}" aria-hidden="true"></i>
+        <i class="fa fa-star{% if single_product.averagereview >= 4.5 and single_product.averagereview < 5 %}-half-o{% elif single_product.averagereview < 4.5 %}-o{% endif %}" aria-hidden="true"></i>
+      <span style="color:black;"> ({{single_product.countreview}})</span>
+      </span>
+    </header>
+    
+  
+    <article class="box mb-3">
+  
+    {% for review in reviews %}
+      <div class="icontext w-100">
+        {% comment %} <img src="{% static {{userprofile.profile_picture.url}} %}" class="img-xs icon rounded-circle"> {% endcomment %}
+        <img src="{{review.user.userprofile.profile_picture.url}}" class="img-xs icon rounded-circle">
+        <div class="text">
+          <span class="date text-muted float-md-right">{{review.updated_date}}</span>  
+          <h6 class="mb-1">{{review.user.first_name}} {{review.user.last_name}}</h6>
+          <div>
+          <span style="color:#ffb503;">
+            <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o{% endif %}" aria-hidden="true"></i>
+            <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o{% endif %}" aria-hidden="true"></i>
+            <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o{% endif %}" aria-hidden="true"></i>
+            <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o{% endif %}" aria-hidden="true"></i>
+            <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o{% endif %}" aria-hidden="true"></i>
+          </span>
+          </div>
+          
+        </div>
+      </div> <!-- icontext.// -->
+      <div class="mt-3">
+      <h6>{{review.subject}}</h6>
+        <p>
+          {{review.review}}
+        </p>	
+      </div>
+    {% endfor %}
+    </article>
+</div>
+
+{% endblock content %}
