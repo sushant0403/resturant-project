@@ -119,25 +119,28 @@
             <h6>Ingredients : </h6>
             <p>{{dish.ingredients}}</p>
             <h6>size</h6>
-              <select name="color" class="form-control" required>
-                {% for i in dish.variation_set.sizes %}
-                  <option value="{{i.variation_value}}">{{i.variation_value}}</option>
-                {% endfor %}
-              </select>
+              <form action="/cart/add_cart/{{dish.id}}" method="post">
+              {% csrf_token %}
+                <select name="size" class="form-control" required>
+                  {% for i in dish.variation_set.sizes %}
+                    <option value="{{i.variation_value}}">{{i.variation_value}}</option>
+                  {% endfor %}
+                </select>
 
-            <br>
-            <h6>price</h6>
-              {% for i in dish.variation_set.sizes %}
-                  <p> Nrs {{i.price}} for {{i.variation_value}}
-                    {% if i.stock <= 0 %}
-                    <b class="text-danger">Out of stock</b><br>
-                      <b class="text-warning">comming soon</b>
-                  {% else %}
-                      <b class="text-success">Available</b>
-                  {% endif %}
-                </p>
-              {% endfor %}
-              <button class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </button>
+                <br>
+                <h6>price</h6>
+                {% for i in dish.variation_set.sizes %}
+                    <p> Nrs {{i.price}} for {{i.variation_value}}
+                      {% if i.stock <= 0 %}
+                      <b class="text-danger">Out of stock</b><br>
+                        <b class="text-warning">comming soon</b>
+                    {% else %}
+                        <b class="text-success">Available</b>
+                    {% endif %}
+                  </p>
+                {% endfor %}
+                <button class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </button>
+              </form>
             </div>
         </div>
         <div class="row">

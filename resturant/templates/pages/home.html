@@ -28,8 +28,16 @@
                 <img src="{{dish.image.url}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{dish.dish_name}}</h5>
-                    <p class="card-text">{{dish.description}}</p>
-                    {% comment %} <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> {% endcomment %}
+                    {% for i in dish.variation_set.sizes %}
+                        <p>{{i.variation_value}} : Nrs {{i.price}}
+                            {% if i.stock <= 0 %}
+                                <b class="text-danger">Out of stock</b><br>
+                                <b class="text-warning">comming soon</b>
+                            {% else %}
+                                <b class="text-success">Available</b>
+                            {% endif %}
+                        </p>
+                    {% endfor %}
                 </div>
             </div>
         </a>
