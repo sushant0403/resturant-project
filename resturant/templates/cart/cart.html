@@ -70,7 +70,7 @@
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			{% comment %} {{ {{float({{cart_item.quantity}})}} * {{item.price}}}} {% endcomment %}
+			
 			{% for item in cart_item.variation.all %}
 			<var class="price">Nrs {% widthratio cart_item.quantity 1 item.price %}</var>
 			<small class="text-muted"> Nrs {{item.price}} each </small> 

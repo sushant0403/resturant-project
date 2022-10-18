@@ -227,6 +227,8 @@ def add_cart(request, dish_id):
         return redirect('cart')
 
 
+
+
 def sub_cart(request, dish_id, cart_item_id):
     dish     =   get_object_or_404(Dishes_model, id=dish_id)
     try:
@@ -247,6 +249,8 @@ def sub_cart(request, dish_id, cart_item_id):
 
 
 
+
+
 def remove_cart(request, dish_id , cart_item_id):
     dish     =   get_object_or_404(Dishes_model, id=dish_id)
     if request.user.is_authenticated:
@@ -257,6 +261,8 @@ def remove_cart(request, dish_id , cart_item_id):
     
     cart_item.delete() 
     return redirect('cart')
+
+
 
 
 def cart(request, total=0, quantity=0, cart_items = None):
@@ -296,6 +302,8 @@ def cart(request, total=0, quantity=0, cart_items = None):
 
 
 
+
+
 @login_required(login_url='login')
 def checkout(request, total=0, quantity=0, cart_items = None):
     try :
@@ -307,7 +315,11 @@ def checkout(request, total=0, quantity=0, cart_items = None):
         cart_item_count = cart_items.count()
 
         for cart_item in cart_items:
-            total += (cart_item.dish.price * cart_item.quantity)
+            if cart_item.variation.all:
+                for i in cart_item.variation.all() :
+                    variation = Variation.objects.get(variation_value__iexact=i,dish=cart_item.dish)
+                    total += (variation.price * cart_item.quantity)
+            # total += (cart_item.dish.price * cart_item.quantity)
             quantity += cart_item.quantity
         tax = (2*total)/100
         grand_total = total + tax

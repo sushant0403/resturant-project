@@ -18,8 +18,24 @@
         object-fit: center;
     }
 </style>
-
-<h2> Search results :  </h2>
+{% if "search" in request.path %}
+	<h1 class="title-page">Search Result for " {{keyword}} "</h1>
+    <div><h3>Filters : </h3>
+        <form action="/search_page/filter/{{keyword}}" method="get" >
+{% else %}
+    <h1 class="title-page">Our Store</h1>
+    <div><h3>Filters : </h3>
+        <form action="/categories/{{category_slug}}/" method="get" >
+{% endif %}
+        {% if up_price %}
+        <input type="hidden" id="filter_price" name="filter_price" value="2">
+        <button type="submit" class="btn btn-primary">price <span class="fa fa-arrow-down"></span></button>
+        {% else %}
+        <input type="hidden" id="filter_price" name="filter_price" value="1">
+        <button type="submit" class="btn btn-primary">price <span class="fa fa-arrow-up"></span></button>
+        {% endif %}
+    </form>
+</div>
 {% if product_count < 2 %}
 <p> {{product_count}} dish found.</p>
 {% else %}
@@ -28,12 +44,20 @@
 <div class="card-group dishes">
     {% for dish in dishes %}
         <a href="/dish_detail/{{dish.id}}">
-            <div class="card">
+            <div class="card" style="border: none;">
                 <img src="{{dish.image.url}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{dish.dish_name}}</h5>
-                    <p class="card-text">{{dish.description}}</p>
-                    {% comment %} <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> {% endcomment %}
+                    {% for i in dish.variation_set.sizes %}
+                        <p>{{i.variation_value}} : Nrs {{i.price}}
+                            {% if i.stock <= 0 %}
+                                <b class="text-danger">Out of stock</b><br>
+                                <b class="text-warning">comming soon</b>
+                            {% else %}
+                                <b class="text-success">Available</b>
+                            {% endif %}
+                        </p>
+                    {% endfor %}
                 </div>
             </div>
         </a>

@@ -24,7 +24,7 @@
 <div class="card-group dishes">
     {% for dish in dishes %}
         <a href="/dish_detail/{{dish.id}}">
-            <div class="card">
+            <div class="card" style="border: none;">
                 <img src="{{dish.image.url}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{dish.dish_name}}</h5>

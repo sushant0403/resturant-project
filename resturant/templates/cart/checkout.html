@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'pages/base.html' %}
 {% load static %}
 {% block content %}
 
@@ -11,7 +11,7 @@
 <div class="row">
 	<aside class="col-lg-6">
 <div class="card p-3">
-	<form action="{% url 'place_order' %}" method="POST">
+	<form action="" method="POST">
 		<header class="mb-4"><h4 class="card-title">Billing Address</h4></header>
             {% csrf_token %}
             <div class="form-row">
@@ -84,18 +84,16 @@
                 </tr>
                 </thead>
                 <tbody> 
-
                 {% for cart_item in cart_items %}
-
                 <tr>
                     <td>
                         <figure class="itemside align-items-center">
-                            <div class="aside"><img src="{{cart_item.product.image.url}}" class="img-sm"></div>
+                            <div class="aside"><img src="{{cart_item.dish.image.url}}" class="img-sm"></div>
                             <figcaption class="info">
-                                <a href="{{cart_item.product.get_url}}" class="title text-dark">{{cart_item.product.product_name}}</a>
+                                <a href="/dish_detail/{{cart_item.dish.id}}" class="title text-dark">{{cart_item.dish.dish_name}}</a>
                                 <p class="text-muted small">
-                                {% if cart_item.variations.all %}
-                                    {% for item in cart_item.variations.all %}
+                                    {% if cart_item.variation.all %}
+                                    {% for item in cart_item.variation.all %}
                                         {{item.variation_category | capfirst }} : {{item.variation_value | capfirst }} <br>
                                     {% endfor %}
                                 {% endif %}
@@ -108,9 +106,12 @@
                         <label for=""> {{cart_item.quantity}}</label> <!-- col.// -->
                     </td>
                     <td> 
+                        
                         <div class="price-wrap"> 
-                            <var class="price">${{cart_item.sub_total}}</var> 
-                            <small class="text-muted"> ${{cart_item.product.price}} each </small> 
+                            {% for item in cart_item.variation.all %}
+                                <var class="price">Nrs {% widthratio cart_item.quantity 1 item.price %}</var>
+                                <small class="text-muted"> Nrs {{item.price}} each </small> 
+                            {% endfor %}
                         </div> <!-- price-wrap .// -->
                     </td>
                     
@@ -123,7 +124,7 @@
 
 </tbody>
 </table>
-			{% comment %} <dl class="dlist-align">
+			<dl class="dlist-align">
 			  <dt>No of items:</dt>
 			  <dd class="text-right">{{cart_item_count}}</dd>
 			</dl>
@@ -144,11 +145,8 @@
 			  <dd class="text-right text-dark b"><strong>${{grand_total}}</strong></dd>
 			</dl>
 			<hr>
-			<p class="text-center mb-3">
-				<img src="./images/misc/payments.png" height="26">
-			</p> {% endcomment %}
 			<button type="submit" class="btn btn-primary btn-block" value='submit'>Place Order</button>
-			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+			<a href="/" class="btn btn-light btn-block">Continue Shopping</a>
         </form>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
